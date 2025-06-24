@@ -5,19 +5,38 @@
   "__editorExtras__": {},
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "a3cd009f-0ab0-420d-9278-b9fdab939bbc",
+    "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
     "__expectedType__": "cc.EffectAsset"
   },
-  "_techIdx": 0,
+  "_techIdx": 1,
   "_defines": [
     {
-      "USE_INSTANCING": true,
-      "USE_TEXTURE": true
+      "USE_ALBEDO_MAP": true
     },
+    {},
+    {},
     {},
     {}
   ],
   "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    },
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    },
     {
       "rasterizerState": {},
       "depthStencilState": {},
@@ -49,10 +68,12 @@
   "_props": [
     {
       "mainTexture": {
-        "__uuid__": "ab6efe63-33aa-473f-8946-9f4ee2e0df46@6c48a",
+        "__uuid__": "b8b766f4-2bd1-4077-bd18-0797e7e89c6c@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     },
+    {},
+    {},
     {},
     {}
   ]
