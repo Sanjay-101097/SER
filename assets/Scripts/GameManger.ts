@@ -21,6 +21,7 @@ export class GameManger extends Component {
     custWaPos: Vec3[] = [v3(1.7, 0.1, 0), v3(0.88, 0.1, 0), v3(0, 0.1, 0), v3(-0.8, 0.1, 0), v3(-1.6, 0.1, 0)]
     custROtation: Vec3[] = [v3(-34, 0, 0), v3(90, 180, -3.076), v3(0, 180, 0)]
     isbusy: boolean[] = [false, false, false];
+    queueEmptyPos:Vec3[]=[]
 
     custarry: Node[][] = []
     start() {
@@ -40,28 +41,6 @@ export class GameManger extends Component {
             this.custarry.push(rowarr)
         }
         let idx = 0
-        // this.schedule(() => {
-        //     let animNode = this.custarry[0][idx]
-        //     let finalpos = this.custfinalPos[idx];
-        //     let finalrot = this.custROtation[idx]
-
-        //     const anim = animNode.getComponent(SkeletalAnimation);
-        //     const dir = new Vec3();
-        //     Vec3.subtract(dir, finalpos, animNode.worldPosition);
-        //     Vec3.normalize(dir, dir);
-
-        //     const angleY = Math.atan2(dir.x, dir.z) * 180 / Math.PI;
-
-        //     animNode.eulerAngles = new Vec3(0, angleY, 0);
-        //     anim.crossFade(this.customersAnim[1].name, 0.1);
-        //     tween(animNode).to(1, { position: v3(finalpos.x + 1, 0, finalpos.z) }).call(() => {
-        //         animNode.setPosition(finalpos);
-        //         animNode.setRotationFromEuler(finalrot)
-        //         anim.crossFade(this.customersAnim[this.custfinalPos.indexOf(finalpos) == 1 ? 0 : this.custfinalPos.indexOf(finalpos)].name, 0.1);
-        //     }).start()
-        //     idx += 1;
-
-        // }, 0.5, 2, 1)
 
     }
 
@@ -94,17 +73,23 @@ export class GameManger extends Component {
             const node = collider.node;
             if (node.position.z == 2) {
                 let idx = Number(node.name)
-                if (!this.isbusy[idx] && this.checkWaitingQueue()!=0)
+                let queuepos = this.getPosinCusArry(node)
+                if (!this.isbusy[idx] && this.checkWaitingQueue() != 0) {
                     this.movetoFinal(idx, node)
-                else if (this.waitingIdx < 5)
+                    this.resetQueue(node)
+                }
+
+                else if (this.waitingIdx < 5) {
                     this.movetowaiting(node)
-                this.resetQueue(node)
+                    this.resetQueue(node)
+                }
+
             }
         }
     }
 
     waitingIdx = 0
-    waitingarr =[0,0,0,0,0]
+    waitingarr = [0, 0, 0, 0, 0]
 
     movetowaiting(animNode: Node) {
         let id = this.waitingarr.indexOf(0);
@@ -121,7 +106,7 @@ export class GameManger extends Component {
         animNode.eulerAngles = new Vec3(0, angleY, 0);
         anim.crossFade(this.customersAnim[1].name, 0.1);
         tween(animNode).to(1, { position: v3(finalpos.x, finalpos.y, finalpos.z) }).call(() => {
-            animNode.setPosition(finalpos )
+            animNode.setPosition(finalpos)
             anim.crossFade(this.customersAnim[0].name, 0.1);
             animNode.setRotationFromEuler(0, 180, 0)
             this.waitingcust.push(animNode)
@@ -131,17 +116,18 @@ export class GameManger extends Component {
 
     }
 
-    checkWaitingQueue():number {
+    checkWaitingQueue(): number {
 
         if (this.waitingIdx <= 0) return 1;
         this.waitingcust.forEach((cust, index) => {
             let idx = Number(cust.name);
             if (!this.isbusy[idx]) {
-                 this.waitingarr[this.custWaPos.indexOf(cust.position)] = 0
+                let id = this.custWaPos.findIndex(pos => pos.equals(cust.position))
+                this.waitingarr[id] = 0
                 this.movetoFinal(idx, cust)
                 this.waitingIdx -= 1
                 this.waitingcust.splice(index, 1);
-               
+
                 return 0;
             }
         });
@@ -150,8 +136,7 @@ export class GameManger extends Component {
 
     waitingcust: Node[] = [];
 
-    resetQueue(node) {
-
+    getPosinCusArry(node){
         let col;
         let row;
         for (let i = 0; i < 6; i++) {
@@ -162,11 +147,22 @@ export class GameManger extends Component {
             }
 
         }
+        let arr = []
+        arr.push(row,col)
+        return arr
+    }
+
+    resetQueue(node) {
+
+        let col;
+        let row;
+        [row,col] = this.getPosinCusArry(node)
+        
 
         for (let id = 0; id < 6; id++) {
-              let curnode = this.custarry[id][col]
-            if (id != row && curnode.children[0].active && this.waitingcust.indexOf(curnode) == -1&&this.waitingcust.length<5) {
-              
+            let curnode = this.custarry[id][col]
+            if (id != row && curnode.children[0].active && this.waitingcust.indexOf(curnode) == -1 && this.waitingcust.length < 5) {
+
 
                 let pos = curnode.position
                 const anim = curnode.getComponent(SkeletalAnimation);
