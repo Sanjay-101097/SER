@@ -77,17 +77,17 @@
   ],
   "_props": [
     {
-      "mainColor": {
-        "__type__": "cc.Color",
-        "r": 184,
-        "g": 184,
-        "b": 184,
-        "a": 255
-      },
       "roughness": 0,
       "specularIntensity": 0,
+      "emissive": {
+        "__type__": "cc.Color",
+        "r": 65,
+        "g": 65,
+        "b": 65,
+        "a": 255
+      },
       "mainTexture": {
-        "__uuid__": "ab6efe63-33aa-473f-8946-9f4ee2e0df46@6c48a",
+        "__uuid__": "814fa437-728c-4b0c-ae0e-bf8ba2f04952@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     },
