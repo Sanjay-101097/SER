@@ -100,15 +100,14 @@
         "__editorExtras__": {},
         "_native": "",
         "_effectAsset": {
-          "__uuid__": "f648964e-8d32-41fc-9ac9-7a1e714dd17b",
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
           "__expectedType__": "cc.EffectAsset"
         },
         "_techIdx": 0,
         "_defines": [
-          {
-            "USE_INSTANCING": true,
-            "DCC_APP_NAME": 5
-          },
+          {},
+          {},
+          {},
           {},
           {},
           {}
@@ -149,27 +148,47 @@
                 {}
               ]
             }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
           }
         ],
         "_props": [
           {
-            "albedoScale": 0.800000011920929,
-            "emissive": {
+            "mainColor": {
               "__type__": "cc.Color",
-              "r": 121,
-              "g": 121,
-              "b": 121,
+              "r": 241,
+              "g": 237,
+              "b": 237,
               "a": 255
             },
-            "shininessExponent": 0,
-            "specularColor": {
+            "roughness": 0.016,
+            "specularIntensity": 0.653,
+            "emissive": {
               "__type__": "cc.Color",
-              "r": 121,
-              "g": 121,
-              "b": 121,
+              "r": 114,
+              "g": 114,
+              "b": 114,
               "a": 255
             }
           },
+          {},
+          {},
           {},
           {},
           {}

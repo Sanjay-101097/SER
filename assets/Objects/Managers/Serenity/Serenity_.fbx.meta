@@ -568,9 +568,9 @@
             },
             "mainColor": {
               "__type__": "cc.Color",
-              "r": 195,
-              "g": 42,
-              "b": 84,
+              "r": 112,
+              "g": 112,
+              "b": 112,
               "a": 255
             },
             "emissive": {
@@ -580,6 +580,7 @@
               "b": 57,
               "a": 255
             },
+            "emissiveScale": 0.8,
             "shininessExponent": 5
           },
           {},
