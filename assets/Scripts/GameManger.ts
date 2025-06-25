@@ -1,4 +1,4 @@
-import { _decorator, AnimationClip, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, tween, v3, Vec3 } from 'cc';
+import { _decorator, AnimationClip, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, Tween, tween, v3, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManger')
@@ -21,7 +21,7 @@ export class GameManger extends Component {
     custWaPos: Vec3[] = [v3(1.7, 0.1, 0), v3(0.88, 0.1, 0), v3(0, 0.1, 0), v3(-0.8, 0.1, 0), v3(-1.6, 0.1, 0)]
     custROtation: Vec3[] = [v3(-34, 0, 0), v3(90, 180, -3.076), v3(0, 180, 0)]
     isbusy: boolean[] = [false, false, false];
-    queueEmptyPos:Vec3[]=[]
+    queueEmptyPos: Vec3[] = []
 
     custarry: Node[][] = []
     start() {
@@ -37,10 +37,10 @@ export class GameManger extends Component {
                 let material = this.Emoji[val];
                 node.children[0].getComponent(MeshRenderer).setMaterial(material, 0);
                 rowarr.push(node);
+
             }
             this.custarry.push(rowarr)
         }
-        let idx = 0
 
     }
 
@@ -71,30 +71,45 @@ export class GameManger extends Component {
             const result = PhysicsSystem.instance.raycastClosestResult;
             const collider = result.collider;
             const node = collider.node;
-            if (node.position.z == 2) {
+            if (node.position.z == 2 && node.getComponent(BoxCollider).enabled) {
                 let idx = Number(node.name)
                 let queuepos = this.getPosinCusArry(node)
                 if (!this.isbusy[idx] && this.checkWaitingQueue() != 0) {
+                    if ((node as any).isMoving) return;
+                    (node as any).isMoving = true;
+                    this.scheduleOnce(() => {
+                        this.resetQueue(node)
+                    },0.4)
+
                     this.movetoFinal(idx, node)
-                    this.resetQueue(node)
+
+                    let emptypos = v3(node.position.x, 0, 7)
+                    // this.queueEmptyPos.push(emptypos)
+                    node.getComponent(BoxCollider).enabled = false;
                 }
 
-                else if (this.waitingIdx < 5) {
+                else if (this.waitingcust.length < 5 && node.getComponent(BoxCollider).enabled) {
+                    if ((node as any).isMoving) return;
+                    (node as any).isMoving = true;
+                     this.scheduleOnce(() => {
+                        this.resetQueue(node)
+                    },0.4)
                     this.movetowaiting(node)
-                    this.resetQueue(node)
+
+                    node.getComponent(BoxCollider).enabled = false;
                 }
 
             }
         }
     }
 
-    waitingIdx = 0
     waitingarr = [0, 0, 0, 0, 0]
 
     movetowaiting(animNode: Node) {
         let id = this.waitingarr.indexOf(0);
+        if (id == -1) return;
         this.waitingarr[id] = 1
-
+        console.log("waiting array", this.waitingarr, id)
         let finalpos = this.custWaPos[id];
         const anim = animNode.getComponent(SkeletalAnimation);
         const dir = new Vec3();
@@ -105,38 +120,47 @@ export class GameManger extends Component {
 
         animNode.eulerAngles = new Vec3(0, angleY, 0);
         anim.crossFade(this.customersAnim[1].name, 0.1);
+        Tween.stopAllByTarget(animNode)
+        tween(animNode).stop()
         tween(animNode).to(1, { position: v3(finalpos.x, finalpos.y, finalpos.z) }).call(() => {
+            (animNode as any).isMoving = false;
             animNode.setPosition(finalpos)
             anim.crossFade(this.customersAnim[0].name, 0.1);
             animNode.setRotationFromEuler(0, 180, 0)
             this.waitingcust.push(animNode)
 
+
         }).start()
-        this.waitingIdx += 1
 
     }
 
     checkWaitingQueue(): number {
+        if (this.waitingcust.length <= 0) return 1;
 
-        if (this.waitingIdx <= 0) return 1;
-        this.waitingcust.forEach((cust, index) => {
-            let idx = Number(cust.name);
+        for (let index = 0; index < this.waitingcust.length; index++) {
+            const cust = this.waitingcust[index];
+            const idx = Number(cust.name);
+
             if (!this.isbusy[idx]) {
-                let id = this.custWaPos.findIndex(pos => pos.equals(cust.position))
-                this.waitingarr[id] = 0
-                this.movetoFinal(idx, cust)
-                this.waitingIdx -= 1
-                this.waitingcust.splice(index, 1);
+                let id = this.custWaPos.findIndex(pos => pos.equals(cust.position));
+                if (id === -1) {
 
+                    continue;
+
+                }
+                this.waitingarr[id] = 0;
+                this.movetoFinal(idx, cust);
+                this.waitingcust.splice(index, 1);
                 return 0;
             }
-        });
+        }
 
+        return 1; // No eligible found
     }
 
     waitingcust: Node[] = [];
 
-    getPosinCusArry(node){
+    getPosinCusArry(node) {
         let col;
         let row;
         for (let i = 0; i < 6; i++) {
@@ -148,16 +172,16 @@ export class GameManger extends Component {
 
         }
         let arr = []
-        arr.push(row,col)
+        arr.push(row, col)
         return arr
     }
 
     resetQueue(node) {
-
+        // input.off(Input.EventType.TOUCH_START, this.onTouchStart, this);
         let col;
         let row;
-        [row,col] = this.getPosinCusArry(node)
-        
+        [row, col] = this.getPosinCusArry(node)
+
 
         for (let id = 0; id < 6; id++) {
             let curnode = this.custarry[id][col]
@@ -167,9 +191,12 @@ export class GameManger extends Component {
                 let pos = curnode.position
                 const anim = curnode.getComponent(SkeletalAnimation);
                 anim.crossFade(this.customersAnim[1].name, 0.1);
+                // curnode.setPosition(pos.x, 0, pos.z - 1)
                 tween(curnode).to(0.3, { position: v3(pos.x, 0, pos.z - 1) })
                     .call(() => {
                         anim.crossFade(this.customersAnim[0].name, 0.1);
+                        if(id ==5)
+                            input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
                     })
                     .start()
             }
@@ -196,13 +223,15 @@ export class GameManger extends Component {
         animNode.eulerAngles = new Vec3(0, angleY, 0);
         anim.crossFade(this.customersAnim[1].name, 0.1);
         let correctionIdx = idx == 0 ? 0.25 : -0.45;
+        Tween.stopAllByTarget(animNode)
+        tween(animNode).stop()
         tween(animNode).to(1, { position: v3(finalpos.x + correctionIdx, 0, finalpos.z) }).call(() => {
             animNode.setPosition(finalpos);
             animNode.setRotationFromEuler(finalrot)
             anim.crossFade(this.customersAnim[this.custfinalPos.indexOf(finalpos) == 1 ? 0 : 2].name, 0.1);
+            (animNode as any).isMoving = false;
 
-
-        }).delay(6).call(() => {
+        }).delay(2).call(() => {
             animNode.setPosition(finalpos.x, 0, finalpos.z + 1.5);
             const anim = animNode.getComponent(SkeletalAnimation);
             const dir = new Vec3();
@@ -215,6 +244,8 @@ export class GameManger extends Component {
             anim.crossFade(this.customersAnim[1].name, 0.1);
             tween(animNode).to(1, { x: finalpos.x - 6 }).call(() => {
                 animNode.children[0].active = true;
+                // animNode.setPosition(this.queueEmptyPos[0])
+                // this.queueEmptyPos.splice(0,1);
             }).start()
         }).start()
     }
