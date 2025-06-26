@@ -194,6 +194,12 @@
           {}
         ]
       }
+    },
+    "meshCompress": {
+      "enable": false,
+      "compress": false,
+      "quantize": false,
+      "encode": false
     }
   }
 }
