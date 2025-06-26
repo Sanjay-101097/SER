@@ -1,4 +1,5 @@
-import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, Tween, tween, v3, Vec3 } from 'cc';
+import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, sys, Tween, tween, v3, Vec3 } from 'cc';
+import { super_html_playable } from './super_html_playable';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManger')
@@ -16,17 +17,29 @@ export class GameManger extends Component {
     @property(Material)
     Emoji: Material[] = [];
 
+    @property(Material)
+    Cust: Material[] = [];
+
     @property(Node)
     Particle: Node[] = [];
+
+    @property(Node)
+    dum: Node = null;
 
 
     @property(AudioClip)
     audioclips: AudioClip[] = [];
 
     @property(AudioSource)
-    audiosources:AudioSource []= []
+    audiosources: AudioSource[] = []
 
     audiosource: AudioSource;
+
+    super_html_playable: super_html_playable = new super_html_playable();
+
+    //head5,hair7,clothing3,body2
+
+    //hair,body,clothing,head
 
 
     custfinalPos: Vec3[] = [v3(-1.8, -0.28, -2.86), v3(-0.19, 0.086, -2.57), v3(1.692, -0.375, -3.076)]
@@ -36,6 +49,10 @@ export class GameManger extends Component {
     queueEmptyPos: Vec3[] = []
 
     custarry: Node[][] = []
+
+    public Downnload(): void {
+        this.super.download();
+    }
     start() {
         this.audiosource = this.node.getComponent(AudioSource);
         for (let row = 1; row <= 6; row++) {
@@ -49,6 +66,7 @@ export class GameManger extends Component {
                 let material = this.Emoji[val];
                 node.children[0].getComponent(MeshRenderer).setMaterial(material, 0);
                 rowarr.push(node);
+
 
             }
             this.custarry.push(rowarr)
@@ -84,7 +102,7 @@ export class GameManger extends Component {
             const collider = result.collider;
             const node = collider.node;
             if (node.position.z == 2 && node.getComponent(BoxCollider).enabled) {
-                 this.audiosource.playOneShot(this.audioclips[0], 0.6);
+                this.audiosource.playOneShot(this.audioclips[0], 0.6);
                 let idx = Number(node.name)
                 let queuepos = this.getPosinCusArry(node)
                 if (!this.isbusy[idx] && this.checkWaitingQueue() != 0) {
@@ -220,7 +238,7 @@ export class GameManger extends Component {
 
 
 
-    movetoFinal(idx, animNode) {
+    movetoFinal(idx, animNode: Node) {
         animNode.children[0].active = false;
         this.isbusy[idx] = true
         let finalpos = this.custfinalPos[idx];
@@ -238,7 +256,7 @@ export class GameManger extends Component {
         let correctionIdx = idx == 0 ? 0.25 : -0.45;
         Tween.stopAllByTarget(animNode)
         tween(animNode).stop()
-        tween(animNode).to(1, { position: v3(finalpos.x + correctionIdx, 0, finalpos.z) }).call(() => {
+        tween(animNode).to(1, { position: v3(finalpos.x + correctionIdx, 0, finalpos.z) }).call(() => { anim.crossFade(this.customersAnim[this.custfinalPos.indexOf(finalpos) == 1 ? 0 : 2].name, 0.1); }).to(0.15, { position: v3(finalpos.x + correctionIdx, 1, finalpos.z) }).to(0.15, { position: v3(finalpos.x, finalpos.y, finalpos.z) }).call(() => {
             animNode.setPosition(finalpos);
             animNode.setRotationFromEuler(finalrot)
             anim.crossFade(this.customersAnim[this.custfinalPos.indexOf(finalpos) == 1 ? 0 : 2].name, 0.1);
@@ -246,9 +264,34 @@ export class GameManger extends Component {
             this.Particle[idx].active = true;
             this.audiosources[idx].volume = 0.6
             this.audiosources[idx].play();
-            this.audiosource.playOneShot(this.audioclips[(idx+3)+1], 0.6);
+            this.audiosource.playOneShot(this.audioclips[(idx + 3) + 1], 0.6);
 
-        }).delay(2).call(() => {
+
+
+        }).delay(1).call(() => {
+            animNode.children[7].getComponent(MeshRenderer).setMaterial(
+                this.dum.children[7].getComponent(MeshRenderer).material!, 0
+            );
+            animNode.children[2].getComponent(MeshRenderer).setMaterial(
+                this.dum.children[2].getComponent(MeshRenderer).material!, 0
+            );
+
+            animNode.children[3].getComponent(MeshRenderer).setMaterial(
+                this.dum.children[3].getComponent(MeshRenderer).material!, 0
+            );
+
+            animNode.children[5].getComponent(MeshRenderer).setMaterial(
+                this.dum.children[5].getComponent(MeshRenderer).material!, 0
+            );
+
+            // animNode.children[7].getComponent(MeshRenderer).material[0] = this.dum.children[7].getComponent(MeshRenderer).material[0];
+            // animNode.children[2].getComponent(MeshRenderer).material[0] = this.dum.children[2].getComponent(MeshRenderer).material[0];
+            // animNode.children[3].getComponent(MeshRenderer).material[0] = this.dum.children[3].getComponent(MeshRenderer).material[0];
+            // animNode.children[5].getComponent(MeshRenderer).material[0] = this.dum.children[5].getComponent(MeshRenderer).material[0];
+            // animNode.children[2].getComponent(MeshRenderer).setMaterial(this.cust[1], 0);
+            // animNode.children[3].getComponent(MeshRenderer).setMaterial(this.cust[2], 0);
+            // animNode.children[5].getComponent(MeshRenderer).setMaterial(this.cust[3], 0);
+        }).delay(1).call(() => {
             this.audiosources[idx].stop()
             animNode.setPosition(finalpos.x, 0, finalpos.z + 1.5);
             const anim = animNode.getComponent(SkeletalAnimation);
@@ -267,6 +310,19 @@ export class GameManger extends Component {
                 // this.queueEmptyPos.splice(0,1);
             }).start()
         }).start()
+    }
+
+    OnStartButtonClick() {
+
+        if (sys.os === sys.OS.ANDROID) {
+            window.open("https://play.google.com/store/apps/details?id=co.gxgames.spa&hl=en", "Serinity Spa");
+        } else if (sys.os === sys.OS.IOS) {
+            window.open("https://apps.apple.com/us/app/serenitys-spa-beauty-salon/id6446709410", "Serinity Spa");
+        } else {
+            window.open("https://play.google.com/store/apps/details?id=co.gxgames.spa&hl=en", "Serinity Spa");
+        }
+        this.super_html_playable.download();
+
     }
 
     update(deltaTime: number) {

@@ -5,19 +5,26 @@
   "__editorExtras__": {},
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "a3cd009f-0ab0-420d-9278-b9fdab939bbc",
+    "__uuid__": "f648964e-8d32-41fc-9ac9-7a1e714dd17b",
     "__expectedType__": "cc.EffectAsset"
   },
-  "_techIdx": 1,
+  "_techIdx": 0,
   "_defines": [
-    {
-      "USE_INSTANCING": true,
-      "USE_TEXTURE": true
-    },
+    {},
+    {},
     {},
     {}
   ],
   "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    },
     {
       "rasterizerState": {},
       "depthStencilState": {},
@@ -49,16 +56,18 @@
   "_props": [
     {
       "mainTexture": {
-        "__uuid__": "525ab7f1-52d8-474d-9872-399bbe26bfef@6c48a",
+        "__uuid__": "bb319d9b-68fe-493a-a94f-7c5e489e3281@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "colorScale": {
-        "__type__": "cc.Vec3",
-        "x": 1.4,
-        "y": 1.4,
-        "z": 1.4
+      "mainColor": {
+        "__type__": "cc.Color",
+        "r": 80,
+        "g": 80,
+        "b": 80,
+        "a": 255
       }
     },
+    {},
     {},
     {}
   ]
