@@ -2,16 +2,16 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "ab6efe63-33aa-473f-8946-9f4ee2e0df46",
+  "uuid": "b1887f8b-c416-4aa1-8584-ec53339252cd",
   "files": [
-    ".jpg",
-    ".json"
+    ".json",
+    ".png"
   ],
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "ab6efe63-33aa-473f-8946-9f4ee2e0df46@6c48a",
-      "displayName": "Image Sequence_004_0001",
+      "uuid": "b1887f8b-c416-4aa1-8584-ec53339252cd@6c48a",
+      "displayName": "Serenity_Clothes_Col - Copy",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "ab6efe63-33aa-473f-8946-9f4ee2e0df46",
+        "imageUuidOrDatabaseUri": "b1887f8b-c416-4aa1-8584-ec53339252cd",
         "visible": false
       },
       "ver": "1.0.22",
@@ -37,6 +37,6 @@
     "type": "texture",
     "hasAlpha": false,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "ab6efe63-33aa-473f-8946-9f4ee2e0df46@6c48a"
+    "redirect": "b1887f8b-c416-4aa1-8584-ec53339252cd@6c48a"
   }
 }

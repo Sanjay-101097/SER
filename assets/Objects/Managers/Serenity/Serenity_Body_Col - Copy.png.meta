@@ -2,16 +2,16 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "814fa437-728c-4b0c-ae0e-bf8ba2f04952",
+  "uuid": "8f3c7fd9-4b8a-48c6-bd4e-56f4eab2bece",
   "files": [
-    ".jpg",
-    ".json"
+    ".json",
+    ".png"
   ],
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "814fa437-728c-4b0c-ae0e-bf8ba2f04952@6c48a",
-      "displayName": "rgergerggbghhghh",
+      "uuid": "8f3c7fd9-4b8a-48c6-bd4e-56f4eab2bece@6c48a",
+      "displayName": "Serenity_Body_Col - Copy",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "814fa437-728c-4b0c-ae0e-bf8ba2f04952",
+        "imageUuidOrDatabaseUri": "8f3c7fd9-4b8a-48c6-bd4e-56f4eab2bece",
         "visible": false
       },
       "ver": "1.0.22",
@@ -37,6 +37,6 @@
     "type": "texture",
     "hasAlpha": false,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "814fa437-728c-4b0c-ae0e-bf8ba2f04952@6c48a"
+    "redirect": "8f3c7fd9-4b8a-48c6-bd4e-56f4eab2bece@6c48a"
   }
 }

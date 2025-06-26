@@ -716,9 +716,9 @@
             "specularIntensity": 0,
             "emissive": {
               "__type__": "cc.Color",
-              "r": 51,
-              "g": 51,
-              "b": 51,
+              "r": 17,
+              "g": 17,
+              "b": 17,
               "a": 255
             },
             "mainTexture": {
@@ -812,9 +812,9 @@
           {
             "mainColor": {
               "__type__": "cc.Color",
-              "r": 214,
-              "g": 57,
-              "b": 57,
+              "r": 100,
+              "g": 100,
+              "b": 100,
               "a": 255
             },
             "roughness": 0,
