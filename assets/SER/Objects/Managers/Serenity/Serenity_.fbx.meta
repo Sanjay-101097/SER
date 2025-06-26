@@ -581,6 +581,11 @@
           {}
         ]
       }
+    },
+    "meshCompress": {
+      "enable": true,
+      "compress": true,
+      "encode": false
     }
   }
 }
