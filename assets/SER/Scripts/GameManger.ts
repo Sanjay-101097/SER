@@ -1,4 +1,4 @@
-import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, sys, Tween, tween, v3, Vec3 } from 'cc';
+import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, Sprite, SpriteFrame, sys, Tween, tween, v3, Vec3 } from 'cc';
 import { super_html_playable } from './super_html_playable';
 const { ccclass, property } = _decorator;
 
@@ -26,6 +26,17 @@ export class GameManger extends Component {
     @property(Node)
     dum: Node = null;
 
+    @property(Node)
+    Canvas: Node = null;
+
+    @property(Node)
+    Canvas2: Node = null;
+
+    @property(Node)
+    hand: Node = null;
+
+    @property(SpriteFrame)
+    handSprites: SpriteFrame[] = [];
 
     @property(AudioClip)
     audioclips: AudioClip[] = [];
@@ -54,6 +65,19 @@ export class GameManger extends Component {
         this.super.download();
     }
     start() {
+        const change = tween(this.hand).delay(0.3)
+            .call(() => {
+                this.hand.getComponent(Sprite).spriteFrame = this.handSprites[1];
+            })
+            .delay(0.3)
+            .call(() => {
+                this.hand.getComponent(Sprite).spriteFrame = this.handSprites[0];
+            })
+        tween(this.hand)
+            .sequence(change)
+            .union()
+            .repeatForever()
+            .start();
         this.audiosource = this.node.getComponent(AudioSource);
         for (let row = 1; row <= 6; row++) {
             let rowarr: Node[] = []
@@ -96,12 +120,12 @@ export class GameManger extends Component {
         const queryTrigger = true;
         if (PhysicsSystem.instance.raycastClosest(ray, mask, maxDistance, queryTrigger)) {
 
-
-
             const result = PhysicsSystem.instance.raycastClosestResult;
             const collider = result.collider;
             const node = collider.node;
             if (node.position.z == 2 && node.getComponent(BoxCollider).enabled) {
+                this.hand.active = false;
+                this.enableT = true
                 this.audiosource.playOneShot(this.audioclips[0], 0.6);
                 let idx = Number(node.name)
                 let queuepos = this.getPosinCusArry(node)
@@ -117,6 +141,7 @@ export class GameManger extends Component {
                     let emptypos = v3(node.position.x, 0, 7)
                     // this.queueEmptyPos.push(emptypos)
                     node.getComponent(BoxCollider).enabled = false;
+                    console.log("tofinal")
                 }
 
                 else if (this.waitingcust.length < 5 && node.getComponent(BoxCollider).enabled) {
@@ -128,6 +153,7 @@ export class GameManger extends Component {
                     this.movetowaiting(node)
 
                     node.getComponent(BoxCollider).enabled = false;
+                    console.log("towaiting")
                 }
 
             }
@@ -213,7 +239,6 @@ export class GameManger extends Component {
         let row;
         [row, col] = this.getPosinCusArry(node)
 
-
         for (let id = 0; id < 6; id++) {
             let curnode = this.custarry[id][col]
             if (id != row && curnode.children[0].active && this.waitingcust.indexOf(curnode) == -1 && this.waitingcust.length < 5) {
@@ -223,13 +248,17 @@ export class GameManger extends Component {
                 const anim = curnode.getComponent(SkeletalAnimation);
                 anim.crossFade(this.customersAnim[1].name, 0.1);
                 // curnode.setPosition(pos.x, 0, pos.z - 1)
-                tween(curnode).to(0.3, { position: v3(pos.x, 0, pos.z - 1) })
-                    .call(() => {
-                        anim.crossFade(this.customersAnim[0].name, 0.1);
-                        if (id == 5)
-                            input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
-                    })
-                    .start()
+                
+                    tween(curnode).to(0.3, { position: v3(pos.x, 0, pos.z - 1) })
+                        .call(() => {
+                            curnode.getComponent(BoxCollider).enabled = true;
+                            anim.crossFade(this.customersAnim[0].name, 0.1);
+                            if (id == 5)
+                                input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
+                        })
+                        .start()
+               
+
             }
 
         }
@@ -269,8 +298,8 @@ export class GameManger extends Component {
 
 
         }).delay(1).call(() => {
-            animNode.children[7].getComponent(MeshRenderer).setMaterial(
-                this.dum.children[7].getComponent(MeshRenderer).material!, 0
+            animNode.children[4].getComponent(MeshRenderer).setMaterial(
+                this.dum.children[4].getComponent(MeshRenderer).material!, 0
             );
             animNode.children[2].getComponent(MeshRenderer).setMaterial(
                 this.dum.children[2].getComponent(MeshRenderer).material!, 0
@@ -284,13 +313,7 @@ export class GameManger extends Component {
                 this.dum.children[5].getComponent(MeshRenderer).material!, 0
             );
 
-            // animNode.children[7].getComponent(MeshRenderer).material[0] = this.dum.children[7].getComponent(MeshRenderer).material[0];
-            // animNode.children[2].getComponent(MeshRenderer).material[0] = this.dum.children[2].getComponent(MeshRenderer).material[0];
-            // animNode.children[3].getComponent(MeshRenderer).material[0] = this.dum.children[3].getComponent(MeshRenderer).material[0];
-            // animNode.children[5].getComponent(MeshRenderer).material[0] = this.dum.children[5].getComponent(MeshRenderer).material[0];
-            // animNode.children[2].getComponent(MeshRenderer).setMaterial(this.cust[1], 0);
-            // animNode.children[3].getComponent(MeshRenderer).setMaterial(this.cust[2], 0);
-            // animNode.children[5].getComponent(MeshRenderer).setMaterial(this.cust[3], 0);
+           
         }).delay(1).call(() => {
             this.audiosources[idx].stop()
             animNode.setPosition(finalpos.x, 0, finalpos.z + 1.5);
@@ -323,9 +346,24 @@ export class GameManger extends Component {
         }
         this.super_html_playable.download();
 
+        this.audiosource.stop();
+        this.audiosources.forEach(audio => {
+            audio.stop();
+        });
+
     }
 
+    dt = 0
+    enableT = false;
     update(deltaTime: number) {
+        if (this.enableT) {
+            this.dt += deltaTime;
+            if (this.dt > 30) {
+                this.Canvas.active = true
+                this.Canvas2.active = false
+            }
+        }
+
 
     }
 }
