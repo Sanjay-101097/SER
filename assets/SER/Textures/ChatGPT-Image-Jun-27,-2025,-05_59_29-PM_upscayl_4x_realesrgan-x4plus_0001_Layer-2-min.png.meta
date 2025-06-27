@@ -1,0 +1,42 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "a2c09a09-d3cf-4a1e-a48b-68b26bc4e719",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "a2c09a09-d3cf-4a1e-a48b-68b26bc4e719@6c48a",
+      "displayName": "ChatGPT-Image-Jun-27,-2025,-05_59_29-PM_upscayl_4x_realesrgan-x4plus_0001_Layer-2-min",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "linear",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "a2c09a09-d3cf-4a1e-a48b-68b26bc4e719",
+        "visible": false
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "texture",
+    "hasAlpha": true,
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "a2c09a09-d3cf-4a1e-a48b-68b26bc4e719@6c48a"
+  }
+}

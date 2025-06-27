@@ -1,4 +1,4 @@
-import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, Sprite, SpriteFrame, sys, Tween, tween, v3, Vec3 } from 'cc';
+import { _decorator, AnimationClip, AudioClip, AudioSource, BoxCollider, Camera, Component, geometry, Input, input, instantiate, Material, math, MeshRenderer, Node, PhysicsSystem, Prefab, SkeletalAnimation, Sprite, SpriteFrame, sys, Tween, tween, v3, Vec3, view } from 'cc';
 import { super_html_playable } from './super_html_playable';
 const { ccclass, property } = _decorator;
 
@@ -54,22 +54,35 @@ export class GameManger extends Component {
 
 
     custfinalPos: Vec3[] = [v3(-1.8, -0.28, -2.86), v3(-0.19, 0.086, -2.57), v3(1.692, -0.375, -3.076)]
-    custWaPos: Vec3[] = [v3(1.7, 0.1, 0), v3(0.88, 0.1, 0), v3(0, 0.1, 0), v3(-0.8, 0.1, 0), v3(-1.6, 0.1, 0)]
+    custWaPos: Vec3[] = [v3(1.7, 0.1, -0.5), v3(0.88, 0.1, -0.5), v3(0, 0.1, -0.5), v3(-0.8, 0.1, -0.5), v3(-1.6, 0.1, -0.5)]
     custROtation: Vec3[] = [v3(-34, 0, 0), v3(90, 180, -3.076), v3(0, 180, 0)]
     isbusy: boolean[] = [false, false, false];
     queueEmptyPos: Vec3[] = []
 
     custarry: Node[][] = []
 
+    QueueIdx =0
+
     public Downnload(): void {
         this.super.download();
     }
     start() {
-        const change = tween(this.hand).delay(0.3)
+        const visibleSize = view.getVisibleSizeInPixel();
+        const height = window.innerHeight;
+        let xdiff = +10;
+        let ydiff = -20;
+
+        if (height >= 800) {
+            xdiff = 0
+            ydiff = 0
+        }
+        let pos = this.hand.position
+        this.hand.setPosition(pos.x + xdiff, pos.y + ydiff)
+        const change = tween(this.hand).delay(0.4)
             .call(() => {
                 this.hand.getComponent(Sprite).spriteFrame = this.handSprites[1];
             })
-            .delay(0.3)
+            .delay(0.6)
             .call(() => {
                 this.hand.getComponent(Sprite).spriteFrame = this.handSprites[0];
             })
@@ -85,7 +98,7 @@ export class GameManger extends Component {
                 let val = math.randomRangeInt(0, 3)
                 let node = instantiate(this.cust);
                 this.node.scene.addChild(node);
-                node.setPosition(-2.25 + (col * 0.75), 0, 1 + (row));
+                node.setPosition(-2.25 + (col * 0.75), 0, 0.5 + (row));
                 node.name = val.toString();
                 let material = this.Emoji[val];
                 node.children[0].getComponent(MeshRenderer).setMaterial(material, 0);
@@ -110,20 +123,21 @@ export class GameManger extends Component {
 
     }
 
+
     onTouchStart(event) {
 
         const mousePos = event.getLocation();
         const ray = new geometry.Ray();
         this.camera.screenPointToRay(mousePos.x, mousePos.y, ray);
-        const mask = 0xffffffff; // Detect all layers (default)
-        const maxDistance = 1000; // Maximum ray distance
+        const mask = 0xffffffff;
+        const maxDistance = 1000;
         const queryTrigger = true;
         if (PhysicsSystem.instance.raycastClosest(ray, mask, maxDistance, queryTrigger)) {
 
             const result = PhysicsSystem.instance.raycastClosestResult;
             const collider = result.collider;
             const node = collider.node;
-            if (node.position.z == 2 && node.getComponent(BoxCollider).enabled) {
+            if (node.position.z == 1.5 && node.getComponent(BoxCollider).enabled) {
                 this.hand.active = false;
                 this.enableT = true
                 this.audiosource.playOneShot(this.audioclips[0], 0.6);
@@ -134,12 +148,9 @@ export class GameManger extends Component {
                     (node as any).isMoving = true;
                     this.scheduleOnce(() => {
                         this.resetQueue(node)
-                    }, 0.4)
+                    }, 0.6)
 
                     this.movetoFinal(idx, node)
-
-                    let emptypos = v3(node.position.x, 0, 7)
-                    // this.queueEmptyPos.push(emptypos)
                     node.getComponent(BoxCollider).enabled = false;
                     console.log("tofinal")
                 }
@@ -149,7 +160,7 @@ export class GameManger extends Component {
                     (node as any).isMoving = true;
                     this.scheduleOnce(() => {
                         this.resetQueue(node)
-                    }, 0.4)
+                    }, 0.6)
                     this.movetowaiting(node)
 
                     node.getComponent(BoxCollider).enabled = false;
@@ -179,7 +190,7 @@ export class GameManger extends Component {
         anim.crossFade(this.customersAnim[1].name, 0.1);
         Tween.stopAllByTarget(animNode)
         tween(animNode).stop()
-        tween(animNode).to(1, { position: v3(finalpos.x, finalpos.y, finalpos.z) }).call(() => {
+        tween(animNode).to(0.6, { position: v3(finalpos.x, finalpos.y, finalpos.z) }).call(() => {
             (animNode as any).isMoving = false;
             animNode.setPosition(finalpos)
             anim.crossFade(this.customersAnim[0].name, 0.1);
@@ -193,7 +204,7 @@ export class GameManger extends Component {
 
     checkWaitingQueue(): number {
         if (this.waitingcust.length <= 0) return 1;
-
+        console.log("waitingArea", this.waitingcust.length)
         for (let index = 0; index < this.waitingcust.length; index++) {
             const cust = this.waitingcust[index];
             const idx = Number(cust.name);
@@ -246,18 +257,21 @@ export class GameManger extends Component {
 
                 let pos = curnode.position
                 const anim = curnode.getComponent(SkeletalAnimation);
-                anim.crossFade(this.customersAnim[1].name, 0.1);
-                // curnode.setPosition(pos.x, 0, pos.z - 1)
                 
+                // curnode.setPosition(pos.x, 0, pos.z - 1)
+                if (pos.z != 1.5) {
+                    anim.crossFade(this.customersAnim[1].name, 0.1);
                     tween(curnode).to(0.3, { position: v3(pos.x, 0, pos.z - 1) })
                         .call(() => {
-                            curnode.getComponent(BoxCollider).enabled = true;
                             anim.crossFade(this.customersAnim[0].name, 0.1);
                             if (id == 5)
                                 input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
                         })
                         .start()
-               
+                }else if(pos.z == 1.5){
+                    node.getComponent(BoxCollider).enabled = true;
+
+                }
 
             }
 
@@ -291,9 +305,12 @@ export class GameManger extends Component {
             anim.crossFade(this.customersAnim[this.custfinalPos.indexOf(finalpos) == 1 ? 0 : 2].name, 0.1);
             (animNode as any).isMoving = false;
             this.Particle[idx].active = true;
-            this.audiosources[idx].volume = 0.6
+
+            this.audiosources[idx].volume = 0.7
+
+
             this.audiosources[idx].play();
-            this.audiosource.playOneShot(this.audioclips[(idx + 3) + 1], 0.6);
+            this.audiosource.playOneShot(this.audioclips[(idx + 3) + 1], idx == 0 ? 0.3 : 0.7);
 
 
 
@@ -313,7 +330,7 @@ export class GameManger extends Component {
                 this.dum.children[5].getComponent(MeshRenderer).material!, 0
             );
 
-           
+
         }).delay(1).call(() => {
             this.audiosources[idx].stop()
             animNode.setPosition(finalpos.x, 0, finalpos.z + 1.5);
@@ -355,6 +372,7 @@ export class GameManger extends Component {
 
     dt = 0
     enableT = false;
+
     update(deltaTime: number) {
         if (this.enableT) {
             this.dt += deltaTime;
