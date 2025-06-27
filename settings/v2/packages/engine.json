@@ -36,16 +36,16 @@
             "_value": false
           },
           "rich-text": {
-            "_value": true
+            "_value": false
           },
           "mask": {
-            "_value": true
+            "_value": false
           },
           "graphics": {
             "_value": true
           },
           "ui-skew": {
-            "_value": true
+            "_value": false
           },
           "affine-transform": {
             "_value": true
@@ -79,7 +79,7 @@
             "_value": false
           },
           "physics-2d": {
-            "_value": true,
+            "_value": false,
             "_option": "physics-2d-box2d"
           },
           "physics-2d-box2d": {
@@ -98,13 +98,13 @@
             "_value": false
           },
           "intersection-2d": {
-            "_value": true
+            "_value": false
           },
           "primitive": {
             "_value": true
           },
           "profiler": {
-            "_value": true
+            "_value": false
           },
           "occlusion-query": {
             "_value": false
@@ -116,13 +116,13 @@
             "_value": false
           },
           "particle-2d": {
-            "_value": true
+            "_value": false
           },
           "audio": {
             "_value": true
           },
           "video": {
-            "_value": true
+            "_value": false
           },
           "webview": {
             "_value": true
@@ -131,25 +131,25 @@
             "_value": true
           },
           "websocket": {
-            "_value": true
+            "_value": false
           },
           "websocket-server": {
             "_value": false
           },
           "terrain": {
-            "_value": true
+            "_value": false
           },
           "light-probe": {
             "_value": true
           },
           "tiled-map": {
-            "_value": true
+            "_value": false
           },
           "vendor-google": {
             "_value": false
           },
           "spine": {
-            "_value": true,
+            "_value": false,
             "_option": "spine-3.8"
           },
           "spine-3.8": {
@@ -165,7 +165,7 @@
             }
           },
           "dragon-bones": {
-            "_value": true
+            "_value": false
           },
           "marionette": {
             "_value": true
@@ -188,7 +188,6 @@
           }
         },
         "flags": {
-          "LOAD_SPINE_MANUALLY": false,
           "LOAD_BULLET_MANUALLY": false
         },
         "includeModules": [
@@ -199,29 +198,16 @@
           "audio",
           "base",
           "custom-pipeline",
-          "dragon-bones",
           "gfx-webgl2",
           "graphics",
-          "intersection-2d",
           "light-probe",
           "marionette",
-          "mask",
           "particle",
-          "particle-2d",
-          "physics-2d-box2d",
           "physics-ammo",
           "primitive",
-          "profiler",
-          "rich-text",
           "skeletal-animation",
-          "spine-3.8",
-          "terrain",
-          "tiled-map",
           "tween",
           "ui",
-          "ui-skew",
-          "video",
-          "websocket",
           "webview"
         ],
         "noDeprecatedFeatures": {

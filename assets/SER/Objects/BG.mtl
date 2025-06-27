@@ -87,7 +87,7 @@
       "roughness": 0,
       "specularIntensity": 0,
       "mainTexture": {
-        "__uuid__": "7bb1804c-ef82-4ea1-bb5c-4dda001f0e74@6c48a",
+        "__uuid__": "b84684cc-a059-4e56-8ec1-9567405284c3@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     },
